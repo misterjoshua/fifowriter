@@ -26,4 +26,4 @@ $(TARGET): $(OBJECTS)
 	$(LINKER) $(LFLAGS) $(OBJECTS) -o $@
 
 clean:
-	find $(BINDIR) $(OBJDIR) -type f -not -name ".git*" -print0 | xargs rm -f
+	find $(BINDIR) $(OBJDIR) -type f -not -name ".git*" -print0 | xargs -0 rm -f
