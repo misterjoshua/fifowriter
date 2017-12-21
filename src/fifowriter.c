@@ -202,6 +202,7 @@ void fifowriter_process(options_t *options){
   int input_eof = 0;
   int output_fd = -1;
 
+  /* Run until the input and buffer are exhausted. (if() break) */
   for (;;){
     /* Attempt to open the output if it's not open already. */
     if (output_fd < 0){
