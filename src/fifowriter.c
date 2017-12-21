@@ -53,12 +53,13 @@ typedef struct {
 } options_t;
 
 void free_options(options_t*);
+void show_usage(const char *);
 
 /**
  * Parse commandline options from argc/argv. Return a pointer to valid options,
  * otherwise it returns NULL.
  */
-#define GETOPT_OPTIONS "o:b:ldtci:v"
+#define GETOPT_OPTIONS "o:b:ldtci:vh"
 options_t* parse_options(int ac, char *av[]){
   int opt;
 
@@ -110,6 +111,11 @@ options_t* parse_options(int ac, char *av[]){
       case 'v':
         options->verbose = 1;
         break;
+
+      case 'h':
+        show_usage(av[0]);
+        exit(0);
+        break;
     }
   }
 
@@ -142,7 +148,20 @@ void free_options(options_t *options){
  * Simply show program usage and exit.
  */
 void show_usage(const char *name){
-  fprintf(stderr, "Usage: %s [-tcldv] [-b buffersize] [-o file]\n", name);
+  fprintf(stderr, "Usage: %s [-tcldvh] [-b buffersize] [-i inputfile] [-o outputfile]\n\n", name);
+  fprintf(stderr,
+    "fifowriter writes the contents of its input to an output as it comes in, but\n"\
+    "allows the output and inputs to be fifos but is resilient to fifo read disconnection.\n\n"\
+    "\t-t\tTruncate the output file.\n" \
+    "\t-c\tCreate the output file if it doesn't exist.\n" \
+    "\t-l\tLine-buffer when writing to the output. (TODO)\n" \
+    "\t-d\tDiscard buffer contents when unable to write it.\n" \
+    "\t-v\tVerbose messages on stderr.\n" \
+    "\t-h\tShow usage.\n" \
+    "\t-b\tSpecify the internal buffer size. (1024 bytes by default)\n" \
+    "\t-i\tSpecify the input file to write to the output. (STDIN by default)\n" \
+    "\t-o\tSpecify the output file to write to. (STDOUT by default)\n"
+    );
 }
 
 /* Opens an input. Use stdin unless options specify an input file. */
